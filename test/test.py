@@ -133,7 +133,7 @@ async def test_uart_tx(dut):
     dut._log.info("Reset released")
 
     # Keep RX line idle high before transmission
-    dut.ui_in.value = (dut.ui_in.value.integer & ~1) | 1
+    dut.ui_in.value = (dut.ui_in.value.integer & ~1) | 1 
     await ClockCycles(dut.clk, 100)
 
     # Constants for timing
