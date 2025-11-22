@@ -133,7 +133,7 @@ async def test_uart_tx(dut):
     dut._log.info("Reset released")
 
     # Keep RX line idle high before transmission
-    dut.ui_in[0].value = 1
+    dut.ui_in.value = (dut.ui_in.value.integer & ~1) | 1
     await ClockCycles(dut.clk, 100)
 
     # Constants for timing
@@ -149,11 +149,11 @@ async def test_uart_tx(dut):
     for ch in "MARCO":
         bits = uart_encode(ord(ch))
         for bit in bits:
-            dut.ui_in[0].value = bit
+            dut.ui_in.value = (dut.ui_in.value.integer & ~1) | bit
             await ClockCycles(dut.clk, bit_duration)
 
         # Hold line idle for stop bit and inter-byte delay (2 bit times)
-        dut.ui_in[0].value = 1
+        dut.ui_in.value = (dut.ui_in.value.integer & ~1) | 1
         await ClockCycles(dut.clk, bit_duration * 2)
         timestamp = get_sim_time(units="ns")
         dut._log.info(f"Sent char: {ch}, {timestamp} ns")
